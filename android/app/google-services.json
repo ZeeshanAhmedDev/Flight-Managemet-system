@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218058158468",
+    "project_id": "flight-management-system-e6d26",
+    "storage_bucket": "flight-management-system-e6d26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218058158468:android:016ecc4f6a25ffd1a96dd1",
+        "android_client_info": {
+          "package_name": "com.bytedeveloper.flight_management_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv_z4Rcq725SI9A4sPgZvRISdwKLsx_p4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
