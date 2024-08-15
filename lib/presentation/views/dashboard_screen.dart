@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/core/utils/routes.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
@@ -10,8 +12,8 @@ import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,11 @@ class LoginPage extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
     return Scaffold(
+      appBar: AppBar(
+        actions: [Icon(Icons.logout_sharp)],
+        automaticallyImplyLeading: false,
+        title: const Text(StringConstants.appName),
+      ),
       backgroundColor: ColorConstants.bgColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -2,10 +2,9 @@ import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'dart:math' as math;
+import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
-import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
@@ -19,10 +18,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
+    final TextEditingController firstNameController = TextEditingController();
+    final TextEditingController lastNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: ColorConstants.bgColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -62,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'First Name',
-                            controller: emailController,
+                            controller: firstNameController,
                             isPassword: false,
                           ),
                         ),
@@ -71,11 +71,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'Last Name',
-                            controller: passwordController,
+                            controller: lastNameController,
                             isPassword: true,
                           ),
                         ),
-
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
@@ -87,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Separator(height: screenSizeMediaQuery.height * 0.02),
                         ElevatedButton(
                           onPressed: () async {
-
+                            Navigator.pushNamed(context, AppRoutes.dashboard);
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: ColorConstants.whiteColor,
@@ -99,7 +98,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   fontWeight: FontWeight.w100)),
                           child: const Text(StringConstants.register),
                         ),
-
                       ],
                     ),
                   ),
@@ -112,5 +110,3 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
-
-
