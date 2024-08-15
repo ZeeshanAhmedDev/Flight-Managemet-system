@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flight_management_system/core/utils/routes.dart';
 import 'package:flight_management_system/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child: const MaterialApp(
+      child:  const MaterialApp(
+        initialRoute: AppRoutes.login,
+        onGenerateRoute: AppRoutes.generateRoute,
         debugShowCheckedModeBanner: false,
         title: 'Flight Management System',
         home: LoginPage(),

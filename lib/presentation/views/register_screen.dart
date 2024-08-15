@@ -1,5 +1,4 @@
 import 'package:flight_management_system/core/utils/color_constants.dart';
-import 'package:flight_management_system/core/utils/routes.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,15 +9,20 @@ import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
-    return Scaffold(
+    return  Scaffold(
       backgroundColor: ColorConstants.bgColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -57,7 +61,7 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
-                            labelText: 'Email',
+                            labelText: 'First Name',
                             controller: emailController,
                             isPassword: false,
                           ),
@@ -66,19 +70,24 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
-                            labelText: 'Password',
+                            labelText: 'Last Name',
                             controller: passwordController,
                             isPassword: true,
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: screenSizeMediaQuery.width * 0.3,
+                          child: TextFieldWidget(
+                            labelText: 'Email',
+                            controller: emailController,
+                            isPassword: false,
                           ),
                         ),
                         Separator(height: screenSizeMediaQuery.height * 0.02),
                         ElevatedButton(
                           onPressed: () async {
-                            String email = emailController.text;
-                            String password = passwordController.text;
-                            await Provider.of<AuthProvider>(context,
-                                    listen: false)
-                                .registerUser(email, password, context);
+
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: ColorConstants.whiteColor,
@@ -88,29 +97,8 @@ class LoginPage extends StatelessWidget {
                               textStyle: TextStyle(
                                   fontSize: screenSizeMediaQuery.height * 0.025,
                                   fontWeight: FontWeight.w100)),
-                          child: const Text(StringConstants.logIn),
-                        ),
-                        Separator(height: screenSizeMediaQuery.height*0.04),
-
-                        // Register Button
-                        ElevatedButton(
-                          onPressed: () async {
-                      Navigator.pushNamed(context, AppRoutes.register);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(color: ColorConstants.appBarColor),
-                              foregroundColor: ColorConstants.appBarColor,
-                              fixedSize: Size(screenSizeMediaQuery.width * 0.3,
-                                  screenSizeMediaQuery.height * 0.05),
-                              backgroundColor: ColorConstants.whiteColor,
-                              textStyle: TextStyle(
-                                  fontSize: screenSizeMediaQuery.height * 0.025,
-                                  fontWeight: FontWeight.w100),
-
-                          ),
                           child: const Text(StringConstants.register),
                         ),
-
 
                       ],
                     ),
@@ -124,3 +112,5 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+

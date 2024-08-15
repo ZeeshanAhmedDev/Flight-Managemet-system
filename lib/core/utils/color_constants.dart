@@ -5,4 +5,5 @@ class ColorConstants {
   static const appBarColor = Color(0xFF21A58D);
   static const darkOrangeColor = Color(0xFFF9AF46);
   static const whiteColor = Color(0XFFFFFFFF);
+  static const transparent = Colors.transparent;
 }
