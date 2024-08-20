@@ -28,9 +28,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         suffixIcon: widget.labelText == 'Password'
             ? IconButton(
                 icon: Icon(
-                  // Based on passwordVisible state choose the icon
+
                   widget.isPassword ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).primaryColorDark,
+                  color: ColorConstants.appBarColor,
                 ),
                 onPressed: () {
                   setState(() {
