@@ -28,7 +28,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         suffixIcon: widget.labelText == 'Password'
             ? IconButton(
                 icon: Icon(
-
                   widget.isPassword ? Icons.visibility : Icons.visibility_off,
                   color: ColorConstants.appBarColor,
                 ),
@@ -36,7 +35,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   setState(() {
                     widget.isPassword = !widget.isPassword;
                   });
-                  widget.isPassword ? 'Password' : 'Email';
+                  widget.isPassword ? 'Password' : 'text';
                   const UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: ColorConstants.darkOrangeColor),

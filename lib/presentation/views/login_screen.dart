@@ -5,19 +5,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+import '../../core/utils/form_controller.dart';
 import '../../core/utils/screen_size.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/custom_btn.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextFieldController _formController = TextFieldController();
+
+  Future<void> _loginUser() async {
+    final email = _formController.getValue('email');
+    final password = _formController.getValue('password');
+
+    await Provider.of<AuthProvider>(context, listen: false)
+        .loginUser(email, password, context);
+  }
+
+  void _navigateToDashboardScreen() {
+    if (mounted) {
+      Navigator.pushNamed(context, AppRoutes.dashboard);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
     return Scaffold(
       backgroundColor: ColorConstants.bgColor,
@@ -59,7 +79,7 @@ class LoginPage extends StatelessWidget {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: StringConstants.emailText,
-                            controller: emailController,
+                            controller: _formController.getController('email'),
                             isPassword: false,
                           ),
                         ),
@@ -68,7 +88,8 @@ class LoginPage extends StatelessWidget {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: StringConstants.passwordText,
-                            controller: passwordController,
+                            controller:
+                                _formController.getController('password'),
                             isPassword: true,
                           ),
                         ),
@@ -86,11 +107,9 @@ class LoginPage extends StatelessWidget {
 
                         CustomElevatedButton(
                           screenSizeMediaQuery: screenSizeMediaQuery,
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.dashboard,
-                            );
+                          onTap: () async {
+                            await _loginUser();
+                            _navigateToDashboardScreen();
                           },
                           text: StringConstants.logIn,
                           isHollowButton: false,

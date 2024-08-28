@@ -2,9 +2,13 @@ import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' as math;
+import '../../core/utils/form_controller.dart';
+import '../../core/utils/regex/regex_validator.dart';
 import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
@@ -16,12 +20,40 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextFieldController _formController = TextFieldController();
+  final _regexController = RegexController();
+
+  @override
+  void dispose() {
+    _formController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _registerUser() async {
+    final firstName = _formController.getValue('firstName');
+    final lastName = _formController.getValue('lastName');
+    final email = _formController.getValue('email');
+    final password = _formController.getValue('password');
+
+    if (!_regexController.isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email address format')),
+      );
+      return;
+    }
+
+    await Provider.of<AuthProvider>(context, listen: false)
+        .registerUser(firstName, lastName, email, password, context);
+  }
+
+  void _navigateToDashboardScreen() {
+    if (mounted) {
+      Navigator.pushNamed(context, AppRoutes.dashboard);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController firstNameController = TextEditingController();
-    final TextEditingController lastNameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
     return Scaffold(
       backgroundColor: ColorConstants.bgColor,
@@ -63,7 +95,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'First Name',
-                            controller: firstNameController,
+                            controller:
+                                _formController.getController('firstName'),
                             isPassword: false,
                           ),
                         ),
@@ -72,15 +105,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'Last Name',
-                            controller: lastNameController,
-                            isPassword: true,
+                            controller:
+                                _formController.getController('lastName'),
+                            isPassword: false,
                           ),
                         ),
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'Email',
-                            controller: emailController,
+                            controller: _formController.getController('email'),
                             isPassword: false,
                           ),
                         ),
@@ -88,14 +122,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
                             labelText: 'Password',
-                            controller: passwordController,
+                            controller:
+                                _formController.getController('password'),
                             isPassword: true,
                           ),
                         ),
                         Separator(height: screenSizeMediaQuery.height * 0.02),
                         ElevatedButton(
                           onPressed: () async {
-                            Navigator.pushNamed(context, AppRoutes.dashboard);
+                            await _registerUser();
+                            _navigateToDashboardScreen();
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: ColorConstants.whiteColor,

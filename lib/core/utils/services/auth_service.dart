@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -6,24 +7,58 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class AuthServices {
   final FirebaseAuth _authorization = FirebaseAuth.instance;
 
-  Future<User?> registerWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
+  Future<User?> registerUser(String firstName, String lastName, String email,
+      String password, BuildContext context) async {
     try {
       UserCredential result = await _authorization
           .createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+
+      // Save also user information in the Firebase Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+      });
+
       return user;
     } catch (e) {
+      _showAlert(context, 'Registration Failed',
+          e.toString().replaceFirst('[firebase_auth/weak-password]', ''));
       if (kDebugMode) {
-        _showAlert(
-            context,
-            'Registration Failed',
-            e.toString().replaceFirst('[firebase_auth/weak-password]',
-                '')); // Show the alert using context
-        print("Register error : >>>>>>>>  ${e.toString()}");
+        print("Register error: ${e.toString()}");
       }
       return null;
     }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
+    try {
+      UserCredential result = await _authorization.signInWithEmailAndPassword(
+          email: email, password: password);
+      User? user = result.user;
+      return user;
+    } catch (e) {
+      _showAlert(context, 'Login Failed',
+          e.toString().replaceFirst('[firebase_auth/user-not-found]', ''));
+      if (kDebugMode) {
+        print("Login error: ${e.toString()}");
+      }
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getUserInfo() async {
+    User? user = _authorization.currentUser;
+    if (user != null) {
+      DocumentSnapshot userInfo = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return userInfo.data() as Map<String, dynamic>?;
+    }
+    return null;
   }
 
   void _showAlert(BuildContext context, String title, String desc) {

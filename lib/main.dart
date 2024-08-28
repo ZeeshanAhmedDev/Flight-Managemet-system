@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child:  const MaterialApp(
+      child: const MaterialApp(
         initialRoute: AppRoutes.login,
         onGenerateRoute: AppRoutes.generateRoute,
         debugShowCheckedModeBanner: false,
