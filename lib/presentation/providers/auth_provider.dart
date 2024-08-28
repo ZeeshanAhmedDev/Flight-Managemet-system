@@ -18,6 +18,11 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> resetPassword(String email, BuildContext context) async {
+    await _authorizationServices.resetPassword(email, context);
+    notifyListeners();
+  }
+
   Future<Map<String, dynamic>?> fetchUserInfo() async {
     return await _authorizationServices.getUserInfo();
   }

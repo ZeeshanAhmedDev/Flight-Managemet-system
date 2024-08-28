@@ -2,9 +2,11 @@ import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
@@ -80,7 +82,10 @@ class _ForgotPageState extends State<ForgotPage> {
                         Separator(height: screenSizeMediaQuery.height * 0.04),
                         ElevatedButton(
                           onPressed: () async {
-                            print('button pressed');
+                            final email = emailController.text.trim();
+                            await Provider.of<AuthProvider>(context,
+                                    listen: false)
+                                .resetPassword(email, context);
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: ColorConstants.whiteColor,

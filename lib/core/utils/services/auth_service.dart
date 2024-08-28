@@ -49,6 +49,19 @@ class AuthServices {
     }
   }
 
+  Future<void> resetPassword(String email, BuildContext context) async {
+    try {
+      await _authorization.sendPasswordResetEmail(email: email);
+      _showAlert(context, 'Password Reset',
+          'A password reset link has been sent to $email. Please check your email. Have a Nice day');
+    } catch (e) {
+      _showAlert(context, 'Reset Password Failed', e.toString());
+      if (kDebugMode) {
+        print("Reset password error: ${e.toString()}");
+      }
+    }
+  }
+
   Future<Map<String, dynamic>?> getUserInfo() async {
     User? user = _authorization.currentUser;
     if (user != null) {
