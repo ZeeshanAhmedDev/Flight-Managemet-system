@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../../core/utils/screen_size.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/custom_btn.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
 
@@ -57,7 +58,7 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
-                            labelText: 'Email',
+                            labelText: StringConstants.emailText,
                             controller: emailController,
                             isPassword: false,
                           ),
@@ -66,7 +67,7 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           width: screenSizeMediaQuery.width * 0.3,
                           child: TextFieldWidget(
-                            labelText: 'Password',
+                            labelText: StringConstants.passwordText,
                             controller: passwordController,
                             isPassword: true,
                           ),
@@ -76,49 +77,38 @@ class LoginPage extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left: screenSizeMediaQuery.width * 0.18),
                           child: TextButton(
-                            onPressed: () =>Navigator.pushNamed(context, AppRoutes.forgot),
-                            child: const Text('Forgot Password'),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, AppRoutes.forgot),
+                            child: const Text(StringConstants.forgotPassword),
                           ),
                         ),
                         Separator(height: screenSizeMediaQuery.height * 0.02),
-                        ElevatedButton(
-                          onPressed: () async {
-                            String email = emailController.text;
-                            String password = passwordController.text;
-                            await Provider.of<AuthProvider>(context,
-                                    listen: false)
-                                .registerUser(email, password, context);
+
+                        CustomElevatedButton(
+                          screenSizeMediaQuery: screenSizeMediaQuery,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.dashboard,
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: ColorConstants.whiteColor,
-                              fixedSize: Size(screenSizeMediaQuery.width * 0.3,
-                                  screenSizeMediaQuery.height * 0.05),
-                              backgroundColor: ColorConstants.appBarColor,
-                              textStyle: TextStyle(
-                                  fontSize: screenSizeMediaQuery.height * 0.025,
-                                  fontWeight: FontWeight.w100)),
-                          child: const Text(StringConstants.logIn),
+                          text: StringConstants.logIn,
+                          isHollowButton: false,
                         ),
                         Separator(height: screenSizeMediaQuery.height * 0.04),
 
                         // Register Button
-                        ElevatedButton(
-                          onPressed: () async {
-                            Navigator.pushNamed(context, AppRoutes.register);
+                        CustomElevatedButton(
+                          screenSizeMediaQuery: screenSizeMediaQuery,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.register,
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(
-                                color: ColorConstants.appBarColor),
-                            foregroundColor: ColorConstants.appBarColor,
-                            fixedSize: Size(screenSizeMediaQuery.width * 0.3,
-                                screenSizeMediaQuery.height * 0.05),
-                            backgroundColor: ColorConstants.whiteColor,
-                            textStyle: TextStyle(
-                                fontSize: screenSizeMediaQuery.height * 0.025,
-                                fontWeight: FontWeight.w100),
-                          ),
-                          child: const Text(StringConstants.register),
-                        ),
+                          text: StringConstants.registerTextOnly,
+                          isHollowButton: true,
+                        )
                       ],
                     ),
                   ),

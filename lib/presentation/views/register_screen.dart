@@ -21,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final TextEditingController firstNameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
     return Scaffold(
       backgroundColor: ColorConstants.bgColor,
@@ -81,6 +82,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelText: 'Email',
                             controller: emailController,
                             isPassword: false,
+                          ),
+                        ),
+                        SizedBox(
+                          width: screenSizeMediaQuery.width * 0.3,
+                          child: TextFieldWidget(
+                            labelText: 'Password',
+                            controller: passwordController,
+                            isPassword: true,
                           ),
                         ),
                         Separator(height: screenSizeMediaQuery.height * 0.02),
