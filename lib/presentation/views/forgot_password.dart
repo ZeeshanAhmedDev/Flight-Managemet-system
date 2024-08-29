@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
+import '../../core/utils/validators/form_validators.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/separator.dart';
 import '../widgets/text_field.dart';
@@ -18,10 +19,13 @@ class ForgotPage extends StatefulWidget {
 }
 
 class _ForgotPageState extends State<ForgotPage> {
+  final formKeyForForgetPassword = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
+
     return Scaffold(
       backgroundColor: ColorConstants.bgColor,
       body: Column(
@@ -55,49 +59,59 @@ class _ForgotPageState extends State<ForgotPage> {
                     ),
                     height: screenSizeMediaQuery.height,
                     width: screenSizeMediaQuery.width * 0.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Forgot Password',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: screenSizeMediaQuery.height * 0.03),
-                        ),
-                        Separator(height: screenSizeMediaQuery.height * 0.02),
-                        Text(
-                          'Please enter your an email address. \n \t\t\t We will send you instructions',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: screenSizeMediaQuery.height * 0.03),
-                        ),
-                        SizedBox(
-                          width: screenSizeMediaQuery.width * 0.3,
-                          child: TextFieldWidget(
-                            labelText: 'Email',
-                            controller: emailController,
-                            isPassword: false,
+                    child: Form(
+                      key: formKeyForForgetPassword,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Forgot Password',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: screenSizeMediaQuery.height * 0.03),
                           ),
-                        ),
-                        Separator(height: screenSizeMediaQuery.height * 0.04),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final email = emailController.text.trim();
-                            await Provider.of<AuthProvider>(context,
-                                    listen: false)
-                                .resetPassword(email, context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: ColorConstants.whiteColor,
-                              fixedSize: Size(screenSizeMediaQuery.width * 0.3,
-                                  screenSizeMediaQuery.height * 0.05),
-                              backgroundColor: ColorConstants.appBarColor,
-                              textStyle: TextStyle(
-                                  fontSize: screenSizeMediaQuery.height * 0.025,
-                                  fontWeight: FontWeight.w100)),
-                          child: const Text(StringConstants.forgot),
-                        ),
-                      ],
+                          Separator(height: screenSizeMediaQuery.height * 0.02),
+                          Text(
+                            'Please enter your an email address. \n \t\t\t We will send you instructions',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w100,
+                                fontSize: screenSizeMediaQuery.height * 0.03),
+                          ),
+                          SizedBox(
+                            width: screenSizeMediaQuery.width * 0.3,
+                            child: TextFieldWidget(
+                              validator: FormValidator.validateEmail,
+                              labelText: 'Email',
+                              controller: emailController,
+                              isPassword: false,
+                            ),
+                          ),
+                          Separator(height: screenSizeMediaQuery.height * 0.04),
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (formKeyForForgetPassword.currentState
+                                      ?.validate() ==
+                                  true) {
+                                final email = emailController.text.trim();
+                                await Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .resetPassword(email, context);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                                foregroundColor: ColorConstants.whiteColor,
+                                fixedSize: Size(
+                                    screenSizeMediaQuery.width * 0.3,
+                                    screenSizeMediaQuery.height * 0.05),
+                                backgroundColor: ColorConstants.appBarColor,
+                                textStyle: TextStyle(
+                                    fontSize:
+                                        screenSizeMediaQuery.height * 0.025,
+                                    fontWeight: FontWeight.w100)),
+                            child: const Text(StringConstants.forgot),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

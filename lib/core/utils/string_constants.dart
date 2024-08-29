@@ -6,10 +6,15 @@ class StringConstants {
   static const forgot = 'Send Email';
   static const appName = 'Flight Management System';
   static const dashboardTitleText = 'Compare and book flight with ease';
+  static const viewProfile = 'View Profile';
   static const dashboardSubtitleText = 'Discover your next dream destination';
   static const forgotPassword = 'Forgot Password?';
+  static const firstName = 'First Name';
+  static const lastName = 'Last name';
   static const passwordText = 'Password';
   static const emailText = 'Email';
+  static const updateInformation = 'Update Information';
+  static const alreadyHaveAccount = 'Already have an account?';
 
   //dashboard Strings
   static const searchText = 'Search';

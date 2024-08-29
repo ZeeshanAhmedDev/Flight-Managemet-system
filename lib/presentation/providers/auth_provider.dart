@@ -23,6 +23,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateUserInfo(String firstName, String lastName, String email,
+      BuildContext context) async {
+    await _authorizationServices.updateUserInfo(
+        firstName, lastName, email, context);
+    notifyListeners();
+  }
+
   Future<Map<String, dynamic>?> fetchUserInfo() async {
     return await _authorizationServices.getUserInfo();
   }

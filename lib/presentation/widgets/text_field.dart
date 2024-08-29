@@ -7,11 +7,13 @@ class TextFieldWidget extends StatefulWidget {
     required this.controller,
     required this.isPassword,
     required this.labelText,
+    required this.validator,
   });
 
   final TextEditingController controller;
   bool isPassword;
   final String labelText;
+  final validator;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -23,6 +25,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     return TextFormField(
       controller: widget.controller,
       obscureText: widget.isPassword,
+      validator: widget.validator,
       decoration: InputDecoration(
         labelText: widget.labelText,
         suffixIcon: widget.labelText == 'Password'
