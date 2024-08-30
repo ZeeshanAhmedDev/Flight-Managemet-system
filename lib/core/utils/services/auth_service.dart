@@ -12,31 +12,6 @@ class AuthServices {
   final FirebaseAuth _authorization = FirebaseAuth.instance;
   final customAlert = CustomAlertBox();
 
-/*  Future<User?> registerUser(String firstName, String lastName, String email,
-      String password, BuildContext context) async {
-    try {
-      UserCredential result = await _authorization
-          .createUserWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
-
-      // Save also user information in the Firebase Firestore
-      await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-      });
-
-      return user;
-    } catch (e) {
-      _showAlert(context, 'Registration Failed',
-          e.toString().replaceFirst('[firebase_auth/weak-password]', ''));
-      if (kDebugMode) {
-        print("Register error: ${e.toString()}");
-      }
-      return null;
-    }
-  }*/
-
   Future<User?> registerUser(String firstName, String lastName, String email,
       String password, BuildContext context) async {
     try {
@@ -75,6 +50,58 @@ class AuthServices {
       return null;
     }
   }
+
+  //addflights details
+  ///==========================================START==================================================
+
+  Future<void> addFlights(
+    String date,
+    String departCity,
+    String destCity,
+    String duration,
+    int price,
+    String stopDate,
+    String stopTime,
+    int stops,
+    String time,
+    BuildContext context,
+  ) async {
+    try {
+      // Save flight information in the Firebase Firestore
+      await FirebaseFirestore.instance.collection('flights').add({
+        'date': date,
+        'departCity': departCity,
+        'destCity': destCity,
+        'duration': duration,
+        'price': price,
+        'stopDate': stopDate,
+        'stopTime': stopTime,
+        'stops': stops,
+        'time': time,
+        // Removed 'userId' as we're not associating it with any user
+      });
+
+      // Showing a success dialog.
+      customAlert.buildShowDialog(
+        context,
+        'Flight Added',
+        '',
+        'The flight has been successfully added.',
+        'Close',
+      );
+    } catch (e) {
+      // Showing the error dialog
+      customAlert.buildShowDialog(
+        context,
+        'Add Flight Failed',
+        '',
+        'The flight could not be added due to ${e.toString()}',
+        'Close',
+      );
+    }
+  }
+
+  ///=============================================END===================================================
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password, BuildContext context) async {
@@ -188,11 +215,35 @@ class AuthServices {
     return null;
   }
 
-  /* void _showAlert(BuildContext context, String title, String desc) {
-    Alert(
-      context: context,
-      title: title,
-      desc: desc,
-    ).show();
-  }*/
+  Future<List<Map<String, dynamic>>> getFlightDetails() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('flights').get();
+
+      List<Map<String, dynamic>> flights = querySnapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+
+      return flights;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching flight details: $e');
+      }
+      return [];
+    }
+  }
+
+  Future<void> signOut(BuildContext context) async {
+    try {
+      await _authorization.signOut();
+      if (kDebugMode) {
+        print('Logout Success');
+      }
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Logout Failed');
+      }
+    }
+  }
 }

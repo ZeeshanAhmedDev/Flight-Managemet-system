@@ -7,5 +7,6 @@ class ColorConstants {
   static const darkOrangeColor = Color(0xFFF9AF46);
   static const whiteColor = Color(0XFFFFFFFF);
   static const blackColor = Color(0XFF000000);
+  static const redColor = Color(0xFF7C0000);
   static const transparent = Colors.transparent;
 }

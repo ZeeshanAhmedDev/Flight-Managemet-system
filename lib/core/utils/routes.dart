@@ -1,5 +1,6 @@
 import 'package:flight_management_system/presentation/views/update_profile.dart';
 import 'package:flutter/material.dart';
+import '../../presentation/views/Addflights/add_flights.dart';
 import '../../presentation/views/dashboard_screen.dart';
 import '../../presentation/views/login_screen.dart';
 import '../../presentation/views/register_screen.dart';
@@ -9,6 +10,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String dashboard = '/dashboard';
+  static const String addFlightDetails = '/addFlightDetails';
   static const String forgot = '/forgot';
   static const String updateProfile = '/updateProfile';
 
@@ -24,6 +26,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ForgotPage());
       case updateProfile:
         return MaterialPageRoute(builder: (_) => const UpdateProfilePage());
+      case addFlightDetails:
+        return MaterialPageRoute(builder: (_) => const AddFlightDetails());
 
       default:
         return MaterialPageRoute(

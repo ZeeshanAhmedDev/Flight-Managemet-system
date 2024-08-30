@@ -11,6 +11,23 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // add flight details
+  Future<void> addFlights(
+      String date,
+      String departCity,
+      String destCity,
+      String duration,
+      int price,
+      String stopDate,
+      String stopTime,
+      int stops,
+      String time,
+      BuildContext context) async {
+    await _authorizationServices.addFlights(date, departCity, destCity,
+        duration, price, stopDate, stopTime, stops, time, context);
+    notifyListeners();
+  }
+
   Future<void> loginUser(
       String email, String password, BuildContext context) async {
     await _authorizationServices.signInWithEmailAndPassword(
@@ -32,5 +49,15 @@ class AuthProvider with ChangeNotifier {
 
   Future<Map<String, dynamic>?> fetchUserInfo() async {
     return await _authorizationServices.getUserInfo();
+  }
+
+  Future<List<Map<String, dynamic>>> getFlightDetails() async {
+    return await _authorizationServices.getFlightDetails();
+  }
+
+  // New method for logout
+  Future<void> logout(BuildContext context) async {
+    await _authorizationServices.signOut(context);
+    notifyListeners();
   }
 }

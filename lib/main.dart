@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MaterialApp(
-        initialRoute: AppRoutes.dashboard,
+        initialRoute: AppRoutes.login,
         onGenerateRoute: AppRoutes.generateRoute,
         debugShowCheckedModeBanner: false,
         title: 'Flight Management System',

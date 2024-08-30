@@ -16,12 +16,14 @@ class StringConstants {
   static const updateInformation = 'Update Information';
   static const alreadyHaveAccount = 'Already have an account?';
 
+  static const bookFlight = 'Book Flight';
+  static const selectPerson = 'Select Person';
+
   //dashboard Strings
   static const searchText = 'Search';
   static const whereToText = 'Where to?';
   static const whereFromText = 'Where from?';
   static const selectDate = 'Select date';
-  static const selectPerson = 'Select person';
 
   // url Strings
 

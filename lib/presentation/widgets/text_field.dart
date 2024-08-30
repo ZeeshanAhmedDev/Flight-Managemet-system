@@ -7,13 +7,13 @@ class TextFieldWidget extends StatefulWidget {
     required this.controller,
     required this.isPassword,
     required this.labelText,
-    required this.validator,
+    this.validator,
   });
 
   final TextEditingController controller;
   bool isPassword;
   final String labelText;
-  final validator;
+  var validator;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();

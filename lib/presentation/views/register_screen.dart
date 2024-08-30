@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../../core/utils/form_controller.dart';
-import '../../core/utils/regex/regex_validator.dart';
 import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
 import '../../core/utils/validators/form_validators.dart';
