@@ -1,13 +1,15 @@
+import 'dart:io';
+
 import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/presentation/widgets/payment_card_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:html' as html;
 import 'package:pdf/pdf.dart';
 import '../../core/utils/custom_alert.dart';
 import '../../core/utils/screen_size.dart';
 import '../../core/utils/string_constants.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 class FlightDetailsCard extends StatelessWidget {
   final Map<String, dynamic> flight;
@@ -18,6 +20,126 @@ class FlightDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSizeMediaQuery = ScreenSizeMediaQuery(context: context);
     final customAlert = CustomAlertBox();
+
+    Future<void> generatePdf() async {
+      final pdf = pw.Document();
+      final svgLogo =
+          await rootBundle.loadString('assets/svg_files/airplane.svg');
+      final barcodeSvg =
+          await rootBundle.loadString('assets/svg_files/barcode.svg');
+
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Stack(
+              children: [
+                pw.Positioned.fill(
+                  child: pw.Center(
+                    child: pw.Opacity(
+                      opacity: 0.2,
+                      child: pw.SvgImage(
+                        svg: svgLogo,
+                        height: 200,
+                        width: 200,
+                        fit: pw.BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                pw.Center(
+                  child: pw.Container(
+                    padding: pw.EdgeInsets.all(20),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.blue, width: 2),
+                      borderRadius: pw.BorderRadius.circular(15),
+                    ),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          color: PdfColors.blue,
+                          padding: const pw.EdgeInsets.all(8),
+                          child: pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Text(
+                                'Dummy Airlines',
+                                style: pw.TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: pw.FontWeight.bold,
+                                  color: PdfColors.white,
+                                ),
+                              ),
+                              pw.Text(
+                                'Boarding Pass',
+                                style: pw.TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: pw.FontWeight.bold,
+                                  color: PdfColors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        pw.SizedBox(height: 20),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(16.0),
+                          child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text('Boarding Pass',
+                                  style: pw.TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.SizedBox(height: 20),
+                              pw.Text('Passenger Name: John Davide',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.Text('Flight: New York to London',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.Text('Date: 25 July',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.Text('Departure Time: 10:30 AM',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.Text('Duration: 7h',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.Text('Stops: 1',
+                                  style: const pw.TextStyle(fontSize: 18)),
+                              pw.SizedBox(height: 20),
+                              pw.Text('Thank you for booking with us!',
+                                  style: pw.TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: pw.FontWeight.bold,
+                                      color: PdfColors.green)),
+                              pw.SizedBox(height: 20),
+                              pw.SvgImage(
+                                  svg: barcodeSvg, height: 50, width: 200),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Convert the PDF document to bytes
+      final Uint8List pdfBytes = await pdf.save();
+
+      // Create a Blob from the bytes
+      final blob = html.Blob([pdfBytes], 'application/pdf');
+
+      // Create a URL for the Blob and open it in a new tab
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      html.window.open(url, '_blank');
+
+      // Revoke the URL to free up resources
+      html.Url.revokeObjectUrl(url);
+    }
 
     return Card(
       color: ColorConstants.appBarColor,
@@ -109,335 +231,17 @@ class FlightDetailsCard extends StatelessWidget {
                     ),
                     onPressed: () {
                       showDialog(
-                        context: context,
-                        builder: (context) {
-                          return PaymentCardDialog(
-                            onCancel: () {
-                              Navigator.of(context).pop();
-                            },
-                            onConfirm: () async {
-                              final pdf = pw.Document();
-                              final svgLogo = await rootBundle
-                                  .loadString('assets/svg_files/airplane.svg');
-                              final barcodeSvg = await rootBundle
-                                  .loadString('assets/svg_files/barcode.svg');
-
-                              pdf.addPage(
-                                pw.Page(
-                                  build: (pw.Context context) {
-                                    return pw.Stack(
-                                      children: [
-                                        // Background Image
-                                        pw.Positioned.fill(
-                                          child: pw.Center(
-                                            child: pw.Opacity(
-                                              opacity: 0.2,
-                                              child: pw.SvgImage(
-                                                svg: svgLogo,
-                                                height: 200,
-                                                width: 200,
-                                                fit: pw.BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        // Foreground Content
-                                        pw.Center(
-                                          child: pw.Container(
-                                            padding: pw.EdgeInsets.all(20),
-                                            decoration: pw.BoxDecoration(
-                                              border: pw.Border.all(
-                                                  color: PdfColors.blue,
-                                                  width: 2),
-                                              borderRadius:
-                                                  pw.BorderRadius.circular(15),
-                                            ),
-                                            child: pw.Column(
-                                              crossAxisAlignment:
-                                                  pw.CrossAxisAlignment.start,
-                                              children: [
-                                                // Header
-                                                pw.Container(
-                                                  color: PdfColors.blue,
-                                                  padding:
-                                                      const pw.EdgeInsets.all(
-                                                          8),
-                                                  child: pw.Row(
-                                                    mainAxisAlignment: pw
-                                                        .MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: [
-                                                      pw.Text(
-                                                        'Dummy Airlines',
-                                                        style: pw.TextStyle(
-                                                          fontSize: 22,
-                                                          fontWeight: pw
-                                                              .FontWeight.bold,
-                                                          color:
-                                                              PdfColors.white,
-                                                        ),
-                                                      ),
-                                                      pw.Text(
-                                                        'Boarding Pass',
-                                                        style: pw.TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight: pw
-                                                              .FontWeight.bold,
-                                                          color:
-                                                              PdfColors.white,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                pw.SizedBox(height: 20),
-                                                // Passenger Name
-
-                                                pw.SizedBox(height: 20),
-                                                // Flight Details
-                                                pw.Padding(
-                                                  padding:
-                                                      const pw.EdgeInsets.all(
-                                                          16.0),
-                                                  child: pw.Column(
-                                                    crossAxisAlignment: pw
-                                                        .CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      pw.Text('Boarding Pass',
-                                                          style: pw.TextStyle(
-                                                              fontSize: 40,
-                                                              fontWeight: pw
-                                                                  .FontWeight
-                                                                  .bold)),
-                                                      pw.SizedBox(height: 20),
-
-                                                      pw.Text(
-                                                          'passenger Name: John Davide',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-
-                                                      pw.Text(
-                                                          'Flight: ${flight['departCity']} to ${flight['destCity']}',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-                                                      pw.Text(
-                                                          'Date: ${flight['date']}',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-                                                      pw.Text(
-                                                          'Departure Time: ${flight['time']}',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-                                                      pw.Text(
-                                                          'Duration: ${flight['duration']}',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-                                                      pw.Text(
-                                                          'Stops: ${flight['stops']}',
-                                                          style: const pw
-                                                              .TextStyle(
-                                                              fontSize: 18)),
-                                                      pw.SizedBox(height: 20),
-                                                      pw.Text(
-                                                          'Thank you for booking with us!',
-                                                          style: pw.TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight: pw
-                                                                  .FontWeight
-                                                                  .bold,
-                                                              color: PdfColors
-                                                                  .green)),
-                                                      pw.SizedBox(height: 20),
-                                                      // Barcode
-                                                      pw.SvgImage(
-                                                          svg: barcodeSvg,
-                                                          height: 50,
-                                                          width: 200),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              );
-
-                              await Printing.layoutPdf(
-                                  onLayout: (PdfPageFormat format) async =>
-                                      pdf.save());
-                            },
-                          );
-
-                          // You can call your payment processing logic here
-                        },
-                      );
-                      /*  buildShowDialog(
-                        context,
-                        'Flight Confirmation',
-                        '',
-                        'Your Flight has been confirmed and the boarding pass has been generated.',
-                        'Close',
-                        () async {
-                          Navigator.of(context).pop();
-
-                          final pdf = pw.Document();
-                          final svgLogo = await rootBundle
-                              .loadString('assets/svg_files/airplane.svg');
-                          final barcodeSvg = await rootBundle
-                              .loadString('assets/svg_files/barcode.svg');
-
-                          pdf.addPage(
-                            pw.Page(
-                              build: (pw.Context context) {
-                                return pw.Stack(
-                                  children: [
-                                    // Background Image
-                                    pw.Positioned.fill(
-                                      child: pw.Center(
-                                        child: pw.Opacity(
-                                          opacity: 0.2,
-                                          child: pw.SvgImage(
-                                            svg: svgLogo,
-                                            height: 200,
-                                            width: 200,
-                                            fit: pw.BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // Foreground Content
-                                    pw.Center(
-                                      child: pw.Container(
-                                        padding: pw.EdgeInsets.all(20),
-                                        decoration: pw.BoxDecoration(
-                                          border: pw.Border.all(
-                                              color: PdfColors.blue, width: 2),
-                                          borderRadius:
-                                              pw.BorderRadius.circular(15),
-                                        ),
-                                        child: pw.Column(
-                                          crossAxisAlignment:
-                                              pw.CrossAxisAlignment.start,
-                                          children: [
-                                            // Header
-                                            pw.Container(
-                                              color: PdfColors.blue,
-                                              padding:
-                                                  const pw.EdgeInsets.all(8),
-                                              child: pw.Row(
-                                                mainAxisAlignment: pw
-                                                    .MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-                                                  pw.Text(
-                                                    'Dummy Airlines',
-                                                    style: pw.TextStyle(
-                                                      fontSize: 22,
-                                                      fontWeight:
-                                                          pw.FontWeight.bold,
-                                                      color: PdfColors.white,
-                                                    ),
-                                                  ),
-                                                  pw.Text(
-                                                    'Boarding Pass',
-                                                    style: pw.TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          pw.FontWeight.bold,
-                                                      color: PdfColors.white,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            pw.SizedBox(height: 20),
-                                            // Passenger Name
-
-                                            pw.SizedBox(height: 20),
-                                            // Flight Details
-                                            pw.Padding(
-                                              padding:
-                                                  const pw.EdgeInsets.all(16.0),
-                                              child: pw.Column(
-                                                crossAxisAlignment:
-                                                    pw.CrossAxisAlignment.start,
-                                                children: [
-                                                  pw.Text('Boarding Pass',
-                                                      style: pw.TextStyle(
-                                                          fontSize: 40,
-                                                          fontWeight: pw
-                                                              .FontWeight
-                                                              .bold)),
-                                                  pw.SizedBox(height: 20),
-
-                                                  pw.Text(
-                                                      'passenger Name: John Davide',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-
-                                                  pw.Text(
-                                                      'Flight: ${flight['departCity']} to ${flight['destCity']}',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-                                                  pw.Text(
-                                                      'Date: ${flight['date']}',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-                                                  pw.Text(
-                                                      'Departure Time: ${flight['time']}',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-                                                  pw.Text(
-                                                      'Duration: ${flight['duration']}',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-                                                  pw.Text(
-                                                      'Stops: ${flight['stops']}',
-                                                      style: const pw.TextStyle(
-                                                          fontSize: 18)),
-                                                  pw.SizedBox(height: 20),
-                                                  pw.Text(
-                                                      'Thank you for booking with us!',
-                                                      style: pw.TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight: pw
-                                                              .FontWeight.bold,
-                                                          color:
-                                                              PdfColors.green)),
-                                                  pw.SizedBox(height: 20),
-                                                  // Barcode
-                                                  pw.SvgImage(
-                                                      svg: barcodeSvg,
-                                                      height: 50,
-                                                      width: 200),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
+                          context: context,
+                          builder: (context) {
+                            return PaymentCardDialog(
+                              onCancel: () {
+                                Navigator.of(context).pop();
                               },
-                            ),
-                          );
-
-                          await Printing.layoutPdf(
-                              onLayout: (PdfPageFormat format) async =>
-                                  pdf.save());
-                        },
-                      );*/
+                              onConfirm: () async {
+                                await generatePdf();
+                              },
+                            );
+                          });
                     },
                     child: const Text(
                       StringConstants.bookFlight,

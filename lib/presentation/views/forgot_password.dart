@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
-import '../../core/utils/routes.dart';
 import '../../core/utils/screen_size.dart';
 import '../../core/utils/validators/form_validators.dart';
 import '../providers/auth_provider.dart';

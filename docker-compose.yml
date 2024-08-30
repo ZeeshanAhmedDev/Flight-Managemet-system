@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  flutter-web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - FLUTTER_WEB_ENV=production
+    volumes:
+      - .:/app
+    networks:
+      - flutter-web-network
+
+networks:
+  flutter-web-network:
+    driver: bridge

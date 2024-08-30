@@ -1,7 +1,6 @@
 import 'package:flight_management_system/core/utils/color_constants.dart';
 import 'package:flight_management_system/core/utils/string_constants.dart';
 import 'package:flight_management_system/presentation/widgets/custom_btn.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flight_management_system/core/utils/custom_alert.dart';
-import 'package:flight_management_system/core/utils/validators/form_validators.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../routes.dart';
 
